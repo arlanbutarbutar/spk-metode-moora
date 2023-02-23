@@ -1,4 +1,3 @@
-
 <?php if (!isset($_SESSION[""])) {
   session_start();
 }
@@ -51,7 +50,8 @@ if (isset($_SESSION["data-user"])) {
     }
   }
 
-  $users = mysqli_query($conn, "SELECT * FROM users WHERE id_user!='$idUser' ORDER BY id_user DESC");
+  $users_role = mysqli_query($conn, "SELECT * FROM users_role");
+  $users = mysqli_query($conn, "SELECT users.*, users_role.nama_role FROM users JOIN users_role ON users.id_role=users_role.id_role WHERE users.id_user!='$idUser' ORDER BY users.id_user DESC");
   if (isset($_POST["tambah-user"])) {
     if (add_user($_POST) > 0) {
       $_SESSION["message-success"] = "Pengguna " . $_POST["username"] . " berhasil ditambahkan.";

@@ -43,6 +43,7 @@ if (isset($_SESSION["data-user"])) {
   function add_user($data)
   {
     global $conn;
+    $id_role=htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-role']))));
     $username = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["username"]))));
     $email = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["email"]))));
     $checkEmail = mysqli_query($conn, "SELECT * FROM users WHERE email='$email'");
@@ -53,13 +54,14 @@ if (isset($_SESSION["data-user"])) {
     }
     $password = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["password"]))));
     $password = password_hash($password, PASSWORD_DEFAULT);
-    mysqli_query($conn, "INSERT INTO users(username,email,password) VALUES('$username','$email','$password')");
+    mysqli_query($conn, "INSERT INTO users(id_role,username,email,password) VALUES('$id_role','$username','$email','$password')");
     return mysqli_affected_rows($conn);
   }
   function edit_user($data)
   {
     global $conn, $time;
     $id_user = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["id-user"]))));
+    $id_role=htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-role']))));
     $username = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["username"]))));
     $email = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["email"]))));
     $emailOld = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["emailOld"]))));
@@ -72,7 +74,7 @@ if (isset($_SESSION["data-user"])) {
       }
     }
     $updated_at = date("Y-m-d " . $time);
-    mysqli_query($conn, "UPDATE users SET username='$username', email='$email', updated_at='$updated_at' WHERE id_user='$id_user'");
+    mysqli_query($conn, "UPDATE users SET id_role='$id_role', username='$username', email='$email' WHERE id_user='$id_user'");
     return mysqli_affected_rows($conn);
   }
   function delete_user($data)

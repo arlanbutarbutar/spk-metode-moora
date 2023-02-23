@@ -1,4 +1,3 @@
-
 <?php require_once("../controller/script.php");
 require_once("redirect.php");
 $_SESSION["page-name"] = "Kelola Pengguna";
@@ -52,6 +51,7 @@ $_SESSION["page-url"] = "users";
                           <th scope="col" class="text-center">#</th>
                           <th scope="col" class="text-center">Nama</th>
                           <th scope="col" class="text-center">Email</th>
+                          <th scope="col" class="text-center">Role</th>
                           <th scope="col" class="text-center">Tgl Buat</th>
                           <th scope="col" class="text-center">Tgl Ubah</th>
                           <th scope="col" class="text-center">Aksi</th>
@@ -65,6 +65,7 @@ $_SESSION["page-url"] = "users";
                               <th scope="row"><?= $no; ?></th>
                               <td><?= $row["username"] ?></td>
                               <td><?= $row["email"] ?></td>
+                              <td><?= $row["nama_role"] ?></td>
                               <td>
                                 <div class="badge badge-opacity-success">
                                   <?php $dateCreate = date_create($row["created_at"]);
@@ -91,6 +92,17 @@ $_SESSION["page-url"] = "users";
                                         </div>
                                         <form action="" method="POST">
                                           <div class="modal-body text-center">
+                                            <div class="mb-3">
+                                              <label for="id-role" class="form-label">Role <small class="text-danger">*</small></label>
+                                              <select name="id-role" id="id-role" class="form-control" required>
+                                                <option value="<?= $row['id_role'] ?>"><?= $row['nama_role'] ?></option>
+                                                <?php $id_role = $row['id_role'];
+                                                $takeRole = mysqli_query($conn, "SELECT * FROM users_role WHERE id_role!='$id_role'");
+                                                foreach ($takeRole as $role) : ?>
+                                                  <option value="<?= $role['id_role'] ?>"><?= $role['nama_role'] ?></option>
+                                                <?php endforeach; ?>
+                                              </select>
+                                            </div>
                                             <div class="mb-3">
                                               <label for="username" class="form-label">Nama <small class="text-danger">*</small></label>
                                               <input type="text" name="username" value="<?= $row["username"] ?>" class="form-control text-center" id="username" minlength="3" placeholder="Nama" required>
@@ -161,6 +173,15 @@ $_SESSION["page-url"] = "users";
               </div>
               <form action="" method="post" name="random_form">
                 <div class="modal-body text-center">
+                  <div class="mb-3">
+                    <label for="id-role" class="form-label">Role <small class="text-danger">*</small></label>
+                    <select name="id-role" id="id-role" class="form-control" required>
+                      <option value="">Pilih Role</option>
+                      <?php foreach ($users_role as $role) : ?>
+                        <option value="<?= $role['id_role'] ?>"><?= $role['nama_role'] ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                   <div class="mb-3">
                     <label for="username" class="form-label">Nama <small class="text-danger">*</small></label>
                     <input type="text" name="username" class="form-control text-center" id="username" minlength="3" placeholder="Nama" required>
