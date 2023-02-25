@@ -43,7 +43,7 @@ if (isset($_SESSION["data-user"])) {
   function add_user($data)
   {
     global $conn;
-    $id_role=htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-role']))));
+    $id_role = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-role']))));
     $username = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["username"]))));
     $email = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["email"]))));
     $checkEmail = mysqli_query($conn, "SELECT * FROM users WHERE email='$email'");
@@ -61,7 +61,7 @@ if (isset($_SESSION["data-user"])) {
   {
     global $conn, $time;
     $id_user = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["id-user"]))));
-    $id_role=htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-role']))));
+    $id_role = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-role']))));
     $username = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["username"]))));
     $email = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["email"]))));
     $emailOld = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data["emailOld"]))));
@@ -158,6 +158,13 @@ if (isset($_SESSION["data-user"])) {
   function tambah_siswa($data)
   {
     global $conn;
+    $create_id = mysqli_query($conn, "SELECT * FROM tabel_siswa ORDER BY id_siswa DESC LIMIT 1");
+    if (mysqli_num_rows($create_id) > 0) {
+      $row = mysqli_fetch_assoc($create_id);
+      $id_siswa = $row['id_siswa'] + 1;
+    } else {
+      $id_siswa = 1;
+    }
     $nama = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['nama']))));
     $checkNama = mysqli_query($conn, "SELECT * FROM tabel_siswa WHERE nama='$nama'");
     if (mysqli_num_rows($checkNama) > 0) {
@@ -168,12 +175,48 @@ if (isset($_SESSION["data-user"])) {
     $jk = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['jk']))));
     $ttl = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['ttl']))));
     $nilai = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['nilai']))));
+    $takeNilai = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$nilai'");
+    if (mysqli_num_rows($takeNilai) > 0) {
+      $row = mysqli_fetch_assoc($takeNilai);
+      $nilai_sub1 = $row['nilai_sub'];
+    }
     $presensi = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['presensi']))));
+    $takePresensi = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$presensi'");
+    if (mysqli_num_rows($takePresensi) > 0) {
+      $row = mysqli_fetch_assoc($takePresensi);
+      $nilai_sub2 = $row['nilai_sub'];
+    }
     $pekerjaan = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['pekerjaan']))));
-    $penghasilan = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['penghasilan']))));
+    $takePekerjaan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$pekerjaan'");
+    if (mysqli_num_rows($takePekerjaan) > 0) {
+      $row = mysqli_fetch_assoc($takePekerjaan);
+      $nilai_sub3 = $row['nilai_sub'];
+    }
+    $penghasilan = $data['penghasilan'];
+    $takePenghasilan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$penghasilan'");
+    if (mysqli_num_rows($takePenghasilan) > 0) {
+      $row = mysqli_fetch_assoc($takePenghasilan);
+      $nilai_sub4 = $row['nilai_sub'];
+    }
     $tanggungan = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['tanggungan']))));
+    $takeTanggungan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$tanggungan'");
+    if (mysqli_num_rows($takeTanggungan) > 0) {
+      $row = mysqli_fetch_assoc($takeTanggungan);
+      $nilai_sub5 = $row['nilai_sub'];
+    }
     $kondisi = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['kondisi']))));
-    mysqli_query($conn, "INSERT INTO tabel_siswa(nama,jenis_kelamin,ttl,nilai_raport,presensi_kehadiran,pekerjan_orang_tua,penghasilan_orang_tua,jumlah_tanggungan,kondisi_keluarga) VALUES('$nama','$jk','$ttl','$nilai','$presensi','$pekerjaan','$penghasilan','$tanggungan','$kondisi')");
+    $takeKondisi = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$kondisi'");
+    if (mysqli_num_rows($takeKondisi) > 0) {
+      $row = mysqli_fetch_assoc($takeKondisi);
+      $nilai_sub6 = $row['nilai_sub'];
+    }
+    mysqli_query($conn, "INSERT INTO tabel_siswa(id_siswa,nama,jenis_kelamin,ttl,nilai_raport,presensi_kehadiran,pekerjan_orang_tua,penghasilan_orang_tua,jumlah_tanggungan,kondisi_keluarga) VALUES('$id_siswa','$nama','$jk','$ttl','$nilai','$presensi','$pekerjaan','$penghasilan','$tanggungan','$kondisi')");
+    mysqli_query($conn, "INSERT INTO tabel_nilai(id_kriteria,id_siswa,nilai) VALUES('1','$id_siswa','$nilai_sub1')");
+    mysqli_query($conn, "INSERT INTO tabel_nilai(id_kriteria,id_siswa,nilai) VALUES('2','$id_siswa','$nilai_sub2')");
+    mysqli_query($conn, "INSERT INTO tabel_nilai(id_kriteria,id_siswa,nilai) VALUES('3','$id_siswa','$nilai_sub3')");
+    mysqli_query($conn, "INSERT INTO tabel_nilai(id_kriteria,id_siswa,nilai) VALUES('4','$id_siswa','$nilai_sub4')");
+    mysqli_query($conn, "INSERT INTO tabel_nilai(id_kriteria,id_siswa,nilai) VALUES('5','$id_siswa','$nilai_sub5')");
+    mysqli_query($conn, "INSERT INTO tabel_nilai(id_kriteria,id_siswa,nilai) VALUES('6','$id_siswa','$nilai_sub6')");
     return mysqli_affected_rows($conn);
   }
   function ubah_siswa($data)
@@ -193,11 +236,47 @@ if (isset($_SESSION["data-user"])) {
     $jk = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['jk']))));
     $ttl = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['ttl']))));
     $nilai = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['nilai']))));
+    $takeNilai = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$nilai'");
+    if (mysqli_num_rows($takeNilai) > 0) {
+      $row = mysqli_fetch_assoc($takeNilai);
+      $nilai_sub1 = $row['nilai_sub'];
+    }
     $presensi = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['presensi']))));
+    $takePresensi = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$presensi'");
+    if (mysqli_num_rows($takePresensi) > 0) {
+      $row = mysqli_fetch_assoc($takePresensi);
+      $nilai_sub2 = $row['nilai_sub'];
+    }
     $pekerjaan = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['pekerjaan']))));
-    $penghasilan = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['penghasilan']))));
+    $takePekerjaan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$pekerjaan'");
+    if (mysqli_num_rows($takePekerjaan) > 0) {
+      $row = mysqli_fetch_assoc($takePekerjaan);
+      $nilai_sub3 = $row['nilai_sub'];
+    }
+    $penghasilan = $data['penghasilan'];
+    $takePenghasilan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$penghasilan'");
+    if (mysqli_num_rows($takePenghasilan) > 0) {
+      $row = mysqli_fetch_assoc($takePenghasilan);
+      $nilai_sub4 = $row['nilai_sub'];
+    }
     $tanggungan = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['tanggungan']))));
+    $takeTanggungan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$tanggungan'");
+    if (mysqli_num_rows($takeTanggungan) > 0) {
+      $row = mysqli_fetch_assoc($takeTanggungan);
+      $nilai_sub5 = $row['nilai_sub'];
+    }
     $kondisi = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['kondisi']))));
+    $takeKondisi = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE sub_kriteria='$kondisi'");
+    if (mysqli_num_rows($takeKondisi) > 0) {
+      $row = mysqli_fetch_assoc($takeKondisi);
+      $nilai_sub6 = $row['nilai_sub'];
+    }
+    mysqli_query($conn, "UPDATE tabel_nilai SET nilai='$nilai_sub1' WHERE id_kriteria='1' AND id_siswa='$id_siswa'");
+    mysqli_query($conn, "UPDATE tabel_nilai SET nilai='$nilai_sub2' WHERE id_kriteria='2' AND id_siswa='$id_siswa'");
+    mysqli_query($conn, "UPDATE tabel_nilai SET nilai='$nilai_sub3' WHERE id_kriteria='3' AND id_siswa='$id_siswa'");
+    mysqli_query($conn, "UPDATE tabel_nilai SET nilai='$nilai_sub4' WHERE id_kriteria='4' AND id_siswa='$id_siswa'");
+    mysqli_query($conn, "UPDATE tabel_nilai SET nilai='$nilai_sub5' WHERE id_kriteria='5' AND id_siswa='$id_siswa'");
+    mysqli_query($conn, "UPDATE tabel_nilai SET nilai='$nilai_sub6' WHERE id_kriteria='6' AND id_siswa='$id_siswa'");
     mysqli_query($conn, "UPDATE tabel_siswa SET nama='$nama', jenis_kelamin='$jk', ttl='$ttl', nilai_raport='$nilai', presensi_kehadiran='$presensi', pekerjan_orang_tua='$pekerjaan', penghasilan_orang_tua='$penghasilan', jumlah_tanggungan='$tanggungan', kondisi_keluarga='$kondisi' WHERE id_siswa='$id_siswa'");
     return mysqli_affected_rows($conn);
   }

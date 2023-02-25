@@ -5,29 +5,38 @@ if (!isset($_SESSION['data'])) {
   exit;
 } else {
   // Proses Pengambilan Kriteria Dari DB
-  $sql = 'SELECT * FROM kriteria';
-  $result = $conn->query($sql);
+  $data_kriteria = mysqli_query($conn, "SELECT * FROM kriteria JOIN tabel_sub_kriteria ON kriteria.id_kriteria=tabel_sub_kriteria.id_kriteria");
   //-- menyiapkan variable penampung berupa array
   $kriteria = array();
   //-- melakukan iterasi pengisian array untuk tiap record data yang didapat
-  foreach ($result as $row) {
-    $kriteria[$row['id_kriteria']] = array($row['kriteria'], $row['type'], $row['bobot']);
+  foreach ($data_kriteria as $row) {
+    $kriteria[$row['id_kriteria']] = array(
+      $row['kriteria'],
+      $row['type'],
+      $row['bobot'],
+      $row['nilai_sub'],
+    );
   }
 
-  // Menampilan Kriteria
-  print_r($kriteria);
-  echo "<br><br> Tampilan Kriteria<br><br>";
-  foreach ($kriteria as $id_kriteria => $value) {
-    echo $kriteria[$id_kriteria][0] . " " . $kriteria[$id_kriteria][1] . " = " . $kriteria[$id_kriteria][2] . "<br>";
+  //Menampilkan Data Kriteria
+  echo "Data Kriteria<br>================================<br>";
+  echo "<table border='1'>";
+  echo "<tr><th>Nama Kriteria</th><th>Tipe Kriteria</th><th>Bobot Kriteria</th></tr>";
+  foreach ($kriteria as $id_kriteria => $data) {
+    echo "<tr>";
+    echo "<td>" . $data[0] . "</td>";
+    echo "<td>" . $data[1] . "</td>";
+    echo "<td>" . $data[2] . "</td>";
+    echo "</tr>";
   }
+  echo "</table><br>";
 
   // Proses Pengambilan Nilai
-  $sql = 'SELECT * FROM tabel_siswa';
-  $result = $conn->query($sql);
+  $data_siswa = mysqli_query($conn, "SELECT * FROM tabel_siswa");
   //-- menyiapkan variable penampung berupa array
   $alternatif = array();
   //-- melakukan iterasi pengisian array untuk tiap record data yang didapat
-  foreach ($result as $row) {
+  foreach ($data_siswa as $row) {
     $alternatif[$row['id_siswa']] = array(
       $row['nama'],
       $row['jenis_kelamin'],
@@ -37,82 +46,76 @@ if (!isset($_SESSION['data'])) {
       $row['pekerjan_orang_tua'],
       $row['penghasilan_orang_tua'],
       $row['jumlah_tanggungan'],
-      $row['kondisi_keluarga']
+      $row['kondisi_keluarga'],
     );
   }
 
   //Menampilkan Nilai Alternatif
-  echo "<br> INPUTAN ALTERNATIF <br>===================<br>";
-  foreach ($alternatif as $id_siswa => $value) {
-    for ($i = 0; $i <= 7; $i++) {
-      echo $alternatif[$id_siswa][$i] . " ";
-    }
-    echo "<br>";
+  echo "Nilai Alternatif<br>================================<br>";
+  echo "<table border='1'>";
+  echo "<tr><th>Nama Siswa</th><th>Jenis Kelamin</th><th>TTL</th><th>Nilai Raport</th><th>Presensi Kehadiran</th><th>Pekerjaan Orang Tua</th><th>Penghasilan Orang Tua</th><th>Jumlah Tanggungan</th><th>Kondisi Keluarga</th></tr>";
+  foreach ($alternatif as $id_siswa => $row) {
+    echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td><td>" . $row[4] . "</td><td>" . $row[5] . "</td><td>" . $row[6] . "</td><td>" . $row[7] . "</td><td>" . $row[8] . "</td></tr>";
   }
+  echo "</table><br>";
 
-  // Proses Merubah Nilai Ke Angka
-  //-- query untuk mendapatkan semua data sample penilaian di tabel moo_nilai
-  $sql = 'SELECT * FROM tabel_nilai ORDER BY id_siswa,id_kriteria';
-  $result = $conn->query($sql);
+  // Proses Pengambilan Nilai dan Merubah Nilai ke Angka
+  $data_nilai = mysqli_query($conn, "SELECT * FROM tabel_nilai ORDER BY id_siswa,id_kriteria");
   //-- menyiapkan variable penampung berupa array
-  $sample = array();
+  $nilai = array();
   //-- melakukan iterasi pengisian array untuk tiap record data yang didapat
-  foreach ($result as $row) {
-    //-- jika array $sample[$row['id_alternatif']] belum ada maka buat baru
-    //-- $row['id_alternatif'] adalah id kandidat/alternatif
-    if (!isset($sample[$row['id_siswa']])) {
-      $sample[$row['id_siswa']] = array();
+  foreach ($data_nilai as $row) {
+    if (!isset($nilai[$row['id_siswa']])) {
+      $nilai[$row['id_siswa']] = array();
+    } else {
+      $nilai[$row['id_siswa']][$row['id_kriteria']] = array(
+        $row['nilai'],
+      );
     }
-    $sample[$row['id_siswa']][$row['id_kriteria']] = $row['nilai'];
-  }
-
-  // Menampilan Perubahan Nilai Ke Angka
-  echo "<br> KONVERSI NILAI ANGKA <br>==================<br>";
-  foreach ($sample as $id_sample => $value) {
-    foreach ($kriteria as $id_kriteria => $value) {
-      echo $sample[$id_sample][$id_kriteria] . " ";
-    }
-    echo "<br>";
   }
 
   // Proses Normalisasi Matrix
-  //-- inisialisasi nilai normalisasi dengan nilai dari $sample
-  $normal = $sample;
-  foreach ($kriteria as $id_kriteria => $k) {
-    //-- inisialisasi nilai pembagi tiap kriteria
-    $pembagi = 0;
-    foreach ($alternatif as $id_siswa => $a) {
-      $pembagi += pow($sample[$id_siswa][$id_kriteria], 2);
-    }
-    foreach ($alternatif as $id_alternatif => $a) {
-      $normal[$id_alternatif][$id_kriteria] = sqrt($pembagi);
+  //-- inisialisasi nilai normalisasi dengan nilai dari $nilai
+  $normal = array();
+  foreach ($nilai as $id_siswa => $kriteria) {
+    $normal[$id_siswa] = array();
+    foreach ($kriteria as $id_kriteria => $nilai_kriteria) {
+      $normal[$id_siswa][$id_kriteria] = $nilai_kriteria[0];
     }
   }
 
   // Menampilkan Normalisasi Matrix
-  echo "<br> NORMALISASI MATRIX <br>==================<br>";
+  echo "Normalisasi Matrix<br>================================<br>";
   foreach ($normal as $id_normal => $value) {
     foreach ($kriteria as $id_kriteria => $value) {
       echo $normal[$id_normal][$id_kriteria] . " | ";
     }
     echo "<br>";
   }
+  echo "<br>";
 
   // Menghitung Nilai Optimasi
   $optimasi = array();
-  foreach ($alternatif as $id_siswa => $a) {
-    $optimasi[$id_siswa] = 0;
-    foreach ($kriteria as $id_kriteria => $k) {
-      $optimasi[$id_siswa] += $normal[$id_siswa][$id_kriteria] * ($k[1] == 'benefit' ? 1 : -1) * $k[2];
+  foreach ($normal as $id_siswa => $kriteria) {
+    $optimasi[$id_siswa] = 1;
+    foreach ($kriteria as $nilai_kriteria) {
+      $optimasi[$id_siswa] *= $nilai_kriteria;
     }
+    $optimasi[$id_siswa] = pow($optimasi[$id_siswa], 1 / count($kriteria));
   }
 
   // Menampilkan Nilai Optimasi
-  echo "<br> NILAI OPTIMASI <br>==================<br>";
+  echo "Nilai Optimasi<br>================================<br>";
+  echo "<table border='1'>";
+  echo "<tr><tr><th>Alternatif</th><th>ID</th><th>Optimasi</th></tr></tr>";
   foreach ($optimasi as $id_optimasi => $value) {
-    echo $alternatif[$id_optimasi][0] . $id_optimasi . "<br>" . $optimasi[$id_optimasi];
-    echo "<br>=======<br>";
+    echo "<tr>";
+    echo "<td>" . $alternatif[$id_optimasi][0] . "</td>";
+    echo "<td>" . $id_optimasi . "</td>";
+    echo "<td>" . $optimasi[$id_optimasi] . "</td>";
+    echo "</tr>";
   }
+  echo "</table><br>";
 
   // Merangking
   //--mengurutkan data secara descending dengan tetap mempertahankan key/index array-nya
@@ -121,18 +124,32 @@ if (!isset($_SESSION['data'])) {
   $index = key($optimasi);
 
   // Menampilkan Hasil Akhir
-  echo "<br> NILAI OPTIMASI URUT <br>==================<br>";
+  echo "Nilai Optimasi Urut<br>================================<br>";
+  echo "<table border='1'>";
+  echo "<tr><tr><th>Alternatif</th><th>ID</th><th>Optimasi</th></tr></tr>";
   foreach ($optimasi as $id_optimasi => $value) {
-    echo $alternatif[$id_optimasi][0] . $id_optimasi . "<br>" . $optimasi[$id_optimasi];
-    echo "<br>=======<br>";
+    echo "<tr>";
+    echo "<td>" . $alternatif[$id_optimasi][0] . "</td>";
+    echo "<td>" . $id_optimasi . "</td>";
+    echo "<td>" . $optimasi[$id_optimasi] . "</td>";
+    echo "</tr>";
   }
+  echo "</table><br>";
 
-  echo "<br> HASIL 3 TERTINGGI <br>==================<br>";
+  echo "Hasil 3 Tertinggi<br>================================<br>";
   $rank = 1;
   $terima = $_SESSION['data']['jsiswa'];
   $tanggal =  date("Y-m-d h:i:s");
+  echo "<table border='1'>";
+  echo "<tr><tr><th>Alternatif</th><th>ID</th><th>Optimasi</th></tr></tr>";
   foreach ($optimasi as $id_optimasi => $value) {
-    echo $alternatif[$id_optimasi][0] . $id_optimasi . "<br>" . $optimasi[$id_optimasi];
+    echo "<tr>";
+    echo "<td>" . $alternatif[$id_optimasi][0] . "</td>";
+    echo "<td>" . $id_optimasi . "</td>";
+    echo "<td>" . $optimasi[$id_optimasi] . "</td>";
+    echo "</tr>";
+
+    // Insert data ke database tabel_hasil
     $nama_simpan = $alternatif[$id_optimasi][0];
     if ($rank <= $terima) {
       $sqlInput = "INSERT INTO tabel_hasil (nama, nilai,tanggal,status) VALUES ('$nama_simpan','$optimasi[$id_optimasi]','$tanggal','rekomendasi')";
@@ -141,12 +158,13 @@ if (!isset($_SESSION['data'])) {
       $sqlInput = "INSERT INTO tabel_hasil (nama, nilai,tanggal,status) VALUES ('$nama_simpan','$optimasi[$id_optimasi]','$tanggal','tidak rekomendasi')";
       $conn->query($sqlInput);
     }
-    echo "<br>=======<br>";
     $rank++;
   }
+  echo "</table><br>";
 
-  $_SESSION["message-success"] = "Berhasil menghitung";
-  $_SESSION["time-message"] = time();
-  header("Location: hasil");
-  exit();
+  // $_SESSION["message-success"] = "Berhasil menghitung";
+  // $_SESSION["time-message"] = time();
+  // header("Location: hasil");
+  // exit();
+
 }

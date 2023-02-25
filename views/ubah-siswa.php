@@ -96,7 +96,7 @@ if (!isset($_GET['data'])) {
                               <label class="control-label">Nilai Raport</label>
                               <div class="col-sm-10">
                                 <select class="form-control" name="nilai" required>
-                                  <option value="1"><?= $row['nilai_raport'] ?></option>
+                                  <option value="<?= $row['nilai_raport'] ?>"><?= $row['nilai_raport'] ?></option>
                                   <?php $value = $row['nilai_raport'];
                                   $nilai_raport = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE id_kriteria='1' AND sub_kriteria!='$value'");
                                   while ($d = mysqli_fetch_assoc($nilai_raport)) { ?>
@@ -109,7 +109,7 @@ if (!isset($_GET['data'])) {
                               <label class="control-label">Presensi Kehadiran</label>
                               <div class="col-sm-10">
                                 <select class="form-control" name="presensi" required>
-                                  <option value="2"><?= $row['presensi_kehadiran'] ?></option>
+                                  <option value="<?= $row['presensi_kehadiran'] ?>"><?= $row['presensi_kehadiran'] ?></option>
                                   <?php $value = $row['presensi_kehadiran'];
                                   $presensi_kehadiran = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE id_kriteria='2' AND sub_kriteria!='$value'");
                                   while ($d = mysqli_fetch_assoc($presensi_kehadiran)) { ?>
@@ -122,7 +122,7 @@ if (!isset($_GET['data'])) {
                               <label class="control-label">Pekerjaan Orang Tua</label>
                               <div class="col-sm-10">
                                 <select class="form-control" name="pekerjaan" required>
-                                  <option value="3"><?= $row['pekerjan_orang_tua'] ?></option>
+                                  <option value="<?= $row['pekerjan_orang_tua'] ?>"><?= $row['pekerjan_orang_tua'] ?></option>
                                   <?php $value = $row['pekerjan_orang_tua'];
                                   $pekerjaan_ortu = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE id_kriteria='3' AND sub_kriteria!='$value'");
                                   while ($d = mysqli_fetch_assoc($pekerjaan_ortu)) { ?>
@@ -135,7 +135,7 @@ if (!isset($_GET['data'])) {
                               <label class="control-label">Penghasilan Orang Tua</label>
                               <div class="col-sm-10">
                                 <select class="form-control" name="penghasilan" required>
-                                  <option value="4"><?= $row['penghasilan_orang_tua'] ?></option>
+                                  <option value="<?= $row['penghasilan_orang_tua'] ?>"><?= $row['penghasilan_orang_tua'] ?></option>
                                   <?php $value = $row['penghasilan_orang_tua'];
                                   $penghasilan_ortu = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE id_kriteria='4' AND sub_kriteria!='$value'");
                                   while ($d = mysqli_fetch_assoc($penghasilan_ortu)) { ?>
@@ -148,7 +148,7 @@ if (!isset($_GET['data'])) {
                               <label class="control-label">Jumlah Tanggungan</label>
                               <div class="col-sm-10">
                                 <select class="form-control" name="tanggungan" required>
-                                  <option value="5"><?= $row['jumlah_tanggungan'] ?></option>
+                                  <option value="<?= $row['jumlah_tanggungan'] ?>"><?= $row['jumlah_tanggungan'] ?></option>
                                   <?php $value = $row['jumlah_tanggungan'];
                                   $jumlah_tanggungan = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE id_kriteria='5' AND sub_kriteria!='$value'");
                                   while ($d = mysqli_fetch_assoc($jumlah_tanggungan)) { ?>
@@ -161,7 +161,7 @@ if (!isset($_GET['data'])) {
                               <label class="control-label">Kondisi Keluarga</label>
                               <div class="col-sm-10">
                                 <select class="form-control" name="kondisi" required>
-                                  <option value="6"><?= $row['kondisi_keluarga'] ?></option>
+                                  <option value="<?= $row['kondisi_keluarga'] ?>"><?= $row['kondisi_keluarga'] ?></option>
                                   <?php $value = $row['kondisi_keluarga'];
                                   $kondisi_keluarga = mysqli_query($conn, "SELECT * FROM tabel_sub_kriteria WHERE id_kriteria='6' AND sub_kriteria!='$value'");
                                   while ($d = mysqli_fetch_assoc($kondisi_keluarga)) { ?>

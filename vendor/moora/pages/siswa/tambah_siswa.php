@@ -2,7 +2,7 @@
 
     //sesuaikan dengan database, username, dan password kalian masing-masing
     $servername     = "localhost";
-    $database       = "db_moora"; 
+    $database       = "spk_metode_moora"; 
     $username       = "root";
     $password       = "";
 
