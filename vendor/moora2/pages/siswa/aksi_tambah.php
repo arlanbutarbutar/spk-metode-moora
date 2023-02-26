@@ -49,7 +49,7 @@ if ($conn->query($tambah) == TRUE) {
 						VALUES ('5', '$id_siswa', '$jt')";
 				$conn->query($sJT);
 				$sKK = "INSERT INTO tabel_nilai (id_kriteria, id_siswa, nilai)
-						VALUES ('6', '$id_siswa', '$kk')";
+						VALUES ('5', '$id_siswa', '$kk')";
 				$conn->query($sKK);
 
 

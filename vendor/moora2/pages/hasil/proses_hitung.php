@@ -3,7 +3,7 @@
 $dbhost = 'localhost';
 $dbuser = 'root';
 $dbpass = '';
-$dbname = 'spk_metode_moora';
+$dbname = "spk_metode_moora";
 //-- koneksi ke database server dengan extension mysqli
 $db = new mysqli($dbhost,$dbuser,$dbpass,$dbname);
 //-- hentikan program dan tampilkan pesan kesalahan jika koneksi gagal
@@ -78,7 +78,7 @@ foreach ($result as $row) {
 //MeNAMPILKAN PERUBAHAN NILAI KE ANGKA
 echo "<br> KONVERSI NILAI ANGKA <br>==================<br>";
 foreach ($sample as $id_sample => $value) {
-   foreach ($kriteria as $id_kriteria => $kriteria_value) {
+   foreach ($kriteria as $id_kriteria => $value) {
       echo $sample[$id_sample][$id_kriteria]." ";
    }
    echo "<br>";
@@ -161,3 +161,5 @@ foreach ($optimasi as $id_optimasi => $value) {
 }
 
 // echo "<script>alert('data berhasil di hitung');window.location = '/index.php?module=list_hasil';</script>";
+
+?>

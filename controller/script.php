@@ -193,7 +193,7 @@ if (isset($_SESSION["data-user"])) {
     $_SESSION['data'] = [
       'jsiswa' => $jsiswa,
     ];
-    header("Location: action-hitung");
+    header("Location: " . $_SESSION["page-url"]);
     exit;
   }
   if (isset($_POST["hitung-semua"])) {
@@ -201,7 +201,14 @@ if (isset($_SESSION["data-user"])) {
     $_SESSION['data'] = [
       'jsiswa' => $siswa_all,
     ];
-    header("Location: action-hitung");
+    header("Location: " . $_SESSION["page-url"]);
+    exit;
+  }
+  if (isset($_POST["reset-hitung"])) {
+    if (isset($_SESSION['data']['jsiswa'])) {
+      unset($_SESSION['data']['jsiswa']);
+    }
+    header("Location: " . $_SESSION["page-url"]);
     exit;
   }
   if (isset($_POST["hapus-detail-hasil"])) {
