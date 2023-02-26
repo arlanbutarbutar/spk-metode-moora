@@ -284,6 +284,7 @@ if (isset($_SESSION["data-user"])) {
   {
     global $conn;
     $id_siswa = htmlspecialchars(addslashes(trim(mysqli_real_escape_string($conn, $data['id-siswa']))));
+    mysqli_query($conn, "DELETE FROM tabel_nilai WHERE id_siswa='$id_siswa'");
     mysqli_query($conn, "DELETE FROM tabel_siswa WHERE id_siswa='$id_siswa'");
     return mysqli_affected_rows($conn);
   }
