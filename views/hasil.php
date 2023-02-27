@@ -50,6 +50,7 @@ $_SESSION["page-url"] = "hasil";
                               <td><?= $row['Jsiswa'] ?></td>
                               <td>
                                 <a href="detail-hasil?data=<?= $row['tanggal'] ?>" class="btn btn-primary text-white p-2"><i class="bi bi-eye"></i> Lihat</a>
+                                <a href='cetak?date=<?= $row['tanggal'] ?>' class='btn btn-primary text-white p-2'><i class="bi bi-printer"></i> Cetak</a>
                                 <a class="btn btn-danger p-2 text-white" data-bs-toggle="modal" data-bs-target="#hapus<?= $no ?>"><i class="bi bi-trash3"></i> Hapus</a>
                                 <div class="modal fade" id="hapus<?= $no ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                   <div class="modal-dialog">

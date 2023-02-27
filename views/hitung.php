@@ -233,6 +233,7 @@ $_SESSION["page-url"] = "hitung";
                       <div class='form-group'>
                         <button type='submit' name='reset-hitung' class='btn btn-primary text-white'>Reset</button>
                         <a href='hasil' class='btn btn-secondary'>Hasil</a>
+                        <a href='cetak?date=" . $tanggal . "' class='btn btn-secondary'>Cetak</a>
                       </div>
                     </form>";
                   }

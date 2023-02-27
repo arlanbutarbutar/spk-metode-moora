@@ -6,7 +6,7 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    <?php if ($_SESSION['id_role'] == 2) { ?>
+    <?php if ($_SESSION['id_role'] != 2) { ?>
       <li class="nav-item nav-category">Kelola Pengguna</li>
       <li class="nav-item">
         <a class="nav-link" style="cursor: pointer;" onclick="window.location.href='users'">
