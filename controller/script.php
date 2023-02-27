@@ -26,7 +26,7 @@ if (isset($_SESSION["time-message"])) {
   }
 }
 
-$baseURL = "http://$_SERVER[HTTP_HOST]/apps/spk-metode-moora/";
+$baseURL = "http://$_SERVER[HTTP_HOST]/spk-metode-moora/";
 
 if (!isset($_SESSION["data-user"])) {
   if (isset($_POST["masuk"])) {
