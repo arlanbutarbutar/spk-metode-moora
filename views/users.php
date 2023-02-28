@@ -52,8 +52,6 @@ $_SESSION["page-url"] = "users";
                           <th scope="col" class="text-center">Nama</th>
                           <th scope="col" class="text-center">Email</th>
                           <th scope="col" class="text-center">Role</th>
-                          <th scope="col" class="text-center">Tgl Buat</th>
-                          <th scope="col" class="text-center">Tgl Ubah</th>
                           <th scope="col" class="text-center">Aksi</th>
                         </tr>
                       </thead>
@@ -66,18 +64,6 @@ $_SESSION["page-url"] = "users";
                               <td><?= $row["username"] ?></td>
                               <td><?= $row["email"] ?></td>
                               <td><?= $row["nama_role"] ?></td>
-                              <td>
-                                <div class="badge badge-opacity-success">
-                                  <?php $dateCreate = date_create($row["created_at"]);
-                                  echo date_format($dateCreate, "l, d M Y h:i a"); ?>
-                                </div>
-                              </td>
-                              <td>
-                                <div class="badge badge-opacity-warning">
-                                  <?php $dateUpdate = date_create($row["updated_at"]);
-                                  echo date_format($dateUpdate, "l, d M Y h:i a"); ?>
-                                </div>
-                              </td>
                               <td class="d-flex justify-content-center">
                                 <div class="col">
                                   <button type="button" class="btn btn-warning btn-sm text-white rounded-0 border-0" style="height: 30px;" data-bs-toggle="modal" data-bs-target="#ubah<?= $row["id_user"] ?>">

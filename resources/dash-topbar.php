@@ -34,10 +34,7 @@
         <p class="">
           <i class="mdi mdi-subdirectory-arrow-right"></i>
           <a href="./" class="text-decoration-none text-dark">Dashboard</a>
-          <?php if ($_SESSION["page-url"] == "lokasi?gereja=" . $_GET["gereja"]) { ?>
-            / <a href="gereja" class="text-decoration-none text-dark">Gereja</a>
-          <?php }
-          if ($_SESSION["page-name"] != "Dashboard") {
+          <?php if ($_SESSION["page-name"] != "Dashboard") {
             echo " / " . $_SESSION["page-name"];
           } ?>
         </p>
