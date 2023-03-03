@@ -26,7 +26,9 @@ if (isset($_SESSION["time-message"])) {
   }
 }
 
-$baseURL = "http://$_SERVER[HTTP_HOST]/spk-metode-moora/";
+$baseURL = "http://$_SERVER[HTTP_HOST]/apps/spk-metode-moora/";
+
+$view_siswa = mysqli_query($conn, "SELECT tabel_siswa.*, tabel_hasil.nilai, tabel_hasil.tanggal, tabel_hasil.status FROM tabel_siswa JOIN tabel_hasil ON tabel_siswa.nama=tabel_hasil.nama");
 
 if (!isset($_SESSION["data-user"])) {
   if (isset($_POST["masuk"])) {
